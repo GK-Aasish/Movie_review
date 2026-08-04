@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="auth-form-container">
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <label for="username">Username</label>
+                <input type="text">
+                <span class="error-message"></span>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="text">
+                <span class="error-message"></span>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="text">
+                <span class="error-message"></span>
+            </div>
+            <div>
+                <label for="confirm_password">Confirm Password</label>
+                <input type="text">
+                <span class="error-message"></span>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account <a href="#">Login!</a></p>
+    </div>
+{% endblock %}
