@@ -2,7 +2,7 @@
 {% block content %}
     <main>
         <div class="hero">
-            <h2>Welcome to Movie Review <span>User</span></h2>
+            <h2>Welcome to Movie Review <br> <span>{% if request.user.is_authenticated %}{{user.username}}{% endif %}</span></h2>
             <span>Where movie meets critigue</span>
             <button>Learn more</button>
         </div>
