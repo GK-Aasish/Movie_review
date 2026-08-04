@@ -1,6 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.models import User
+from core.models import Movie,Genre
 
 # Create your views here.
 def home_view(request):
@@ -54,3 +55,51 @@ def login_view(request):
                 login(request,user)
                 return redirect('home')
     return render(request,"auth/login.html")
+
+def movies_view(request):
+    movies = Movie.objects.all()
+    return render(request,"main/movies.html",{"movies":movies})
+
+def movie_detail_view(request,id):
+    movie = get_object_or_404(Movie, id=id)
+    return render(request,"main/movie_details.html",{"movie":movie})
+
+def edit_movie_view(request,id):
+    get_genre = Genre.objects.all()
+    movie = get_object_or_404(Movie,id=id)
+    if request.method == "POST":
+        errors = {}
+
+        # get data from the frontend.
+        title = request.POST.get('title')
+        genre_id = request.POST.get('genre')
+        description = request.POST.get('description')
+        released_date = request.POST.get('released_date')
+
+        if not title:
+            errors['title'] = "Enter title"
+        if not genre_id:
+            errors['genre_id'] = "Enter genre"
+        if not description:
+            errors['description'] = "Enter description"
+        if not released_date:
+            errors['released_date'] = "Enter released_date"
+
+        if errors:
+            get_genre = Genre.objects.all()
+            context = {
+                "errors":errors,
+                "get_genre":get_genre,
+                "movie":movie
+            }
+            return render(request,"main/edit_movie.html",context)
+
+        # Update Movie.
+        movie.title = title
+        movie.genre = get_object_or_404(Genre, id=genre_id)
+        movie.description = description
+        movie.released_date = released_date
+        movie.save()
+        return redirect("movies")
+        
+    return render(request,"main/edit_movie.html",{"get_genre":get_genre,"movie":movie})

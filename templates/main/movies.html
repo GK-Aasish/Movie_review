@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="movies-container">
+        {% for i in movies %}
+        <div class="movies-card">
+            <h1>{{i.title}}</h1>
+            <span>{{i.genre}}</span>
+            <p>{{i.description}}</p>
+            <span>{{i.released_date}}</span>
+        </div>
+            <a href="{% url "details" i.id%}">View details</a>
+        {% endfor %}
+    </div>
+{% endblock %}

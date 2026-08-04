@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="movies-container">
+        <div class="movies-card">
+            <h1>{{movie.title}}</h1>
+            <span>{{movie.genre}}</span>
+            <p>{{movie.description}}</p>
+            <span>{{movie.released_date}}</span>
+        </div>
+        <a href="{% url "edit" movie.id %}">Edit</a>
+    </div>
+{% endblock %}  
