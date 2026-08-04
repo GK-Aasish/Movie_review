@@ -9,22 +9,12 @@
                 <span class="error-message">{{errors.username}}</span>
             </div>
             <div>
-                <label for="email">Email</label>
-                <input type="text" name="email" value="{{data.email}}">
-                <span class="error-message">{{errors.email}}</span>
-            </div>
-            <div>
                 <label for="password">Password</label>
                 <input type="text" name="password">
                 <span class="error-message">{{errors.password}}</span>
             </div>
-            <div>
-                <label for="confirm_password">Confirm Password</label>
-                <input type="text" name="confirm_password">
-                <span class="error-message">{{errors.confirm_password}}</span>
-            </div>
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account <a href="{% url "login" %}">Login!</a></p>
+        <p>Don't have an account <a href="{% url "register" %}">Register!</a></p>
     </div>
 {% endblock %}
