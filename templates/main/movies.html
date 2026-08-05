@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="movies-container">
+        <div class="add-movies">
+            <a href="{% url "add_movie" %}">Add Movie</a>
+        </div>
         {% for i in movies %}
         <div class="movies-card">
             <h1>{{i.title}}</h1>

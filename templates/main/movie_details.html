@@ -8,5 +8,6 @@
             <span>{{movie.released_date}}</span>
         </div>
         <a href="{% url "edit" movie.id %}">Edit</a>
+        <a href="{% url "delete" movie.id %}">Delete</a>
     </div>
 {% endblock %}  

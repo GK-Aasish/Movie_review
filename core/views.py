@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from core.models import Movie,Genre
 
@@ -56,6 +56,10 @@ def login_view(request):
                 return redirect('home')
     return render(request,"auth/login.html")
 
+def logout_view(request):
+    logout(request)
+    return redirect("home")
+
 def movies_view(request):
     movies = Movie.objects.all()
     return render(request,"main/movies.html",{"movies":movies})
@@ -103,3 +107,41 @@ def edit_movie_view(request,id):
         return redirect("movies")
         
     return render(request,"main/edit_movie.html",{"get_genre":get_genre,"movie":movie})
+
+def delete_movie_view(request,id):
+    movie = get_object_or_404(Movie,id=id)
+    movie.delete()
+    return redirect("movies")
+
+def add_movie_view(request):
+    get_genre = Genre.objects.all()
+    if request.method == "POST":
+        errors = {}
+
+        title = request.POST.get('title')
+        genre = request.POST.get('genre')
+        description = request.POST.get('description')
+        released_date = request.POST.get('released_date')
+
+        if not title:
+            errors['title'] = "Enter title"
+        if not genre:
+            errors['genre'] = "Enter genre"
+        if not description:
+            errors['description'] = "Enter description"
+        if not released_date:
+            errors['released_date'] = "Enter released_date"
+
+        if errors:
+            return render(request,"main/add-movie.html",{"errors":errors,"data":request.POST,"get_genre":get_genre})
+
+        # Save movie to the database
+        movie = Movie.objects.create(
+            title = title,
+            genre = get_object_or_404(Genre, id=genre),
+            description = description,
+            released_date = released_date
+        )
+        return redirect("movies")
+    return render(request,"main/add-movie.html",{"get_genre":get_genre})
+

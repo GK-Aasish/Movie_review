@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <form method="post" class="edit-movie-form">
+        {% csrf_token %}
+        <div>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" value="{{data.title}}" >
+            <span class="error-message">{{errors.title}}</span>
+        </div>
+        <div>
+            <label for="genra">Genra</label>
+            <select name="genre" id="genra">
+                <option value="genre">Select One</option>
+                {% for genre in get_genre %}
+                <option value="{{genre.id}}">{{genre.name}}</option>
+                {% endfor %}
+            </select>
+            <span class="error-message">{{errors.genre_id}}</span>
+        </div>
+        <div>
+            <label for="description">Description</label>
+            <textarea name="description" id="description">{{data.description}}</textarea>
+            <span class="error-message">{{errors.description}}</span>
+        </div>
+        <div>
+            <label for="released_date">Released_date</label>
+            <input type="date" name="released_date" id="released_date" value="{{data.released_date|date:'Y-m-d'}}">
+            <span class="error-message">{{errors.released_date}}</span>
+        </div>
+        <button type="submit">Add Movie</button>
+    </form>
+{% endblock %}
