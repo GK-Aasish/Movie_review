@@ -11,16 +11,36 @@
             </div>
             <a href="{% url "add_movie" %}">Add Movie</a>
         </div>
-        {% for i in movies %}
-        <div class="movies-card">
-            <h1>{{i.title}}</h1>
-            <span>{{i.genre}}</span>
-            <p>{{i.description}}</p>
-            <span>{{i.released_date}}</span>
-        </div>
-            <a href="{% url "details" i.id%}">View details</a>
+        {% for movie in p_obj %}
+            <div class="movies-card">
+                <h1>{{movie.title}}</h1>
+                <span>{{movie.genre}}</span>
+                <p>{{movie.description}}</p>
+                <span>{{movie.released_date}}</span>
+                <a href="{% url "details" movie.id%}">View details</a>
         {% empty %}
             <p>No movies found</p>
+            </div>
         {% endfor %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if p_obj.has_previous %}
+                    <!--Go to the absolute Firs Page-->
+                    <a href="?page=1">&laquo; first</a>
+
+                    <!--Go to the absolute Firs Page-->
+                    <a href="?page={{p_obj.previous_page_number}}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{p_obj.number}} of {{p_obj.paginator.num_pages}}
+                </span>
+                {% if p_obj.has_next %}
+                <!-- Go to the next page. -->
+                 <a href="?page={{p_obj.next_page_number}}">next</a>
+                 <!-- Go to the next page. -->
+                 <a href="?page={{p_obj.paginator.num_pages}}"> &raquo; last</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 {% endblock %}

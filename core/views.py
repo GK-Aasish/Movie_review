@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.core.paginator import Paginator
 from core.models import Movie,Genre
 
 # Create your views here.
@@ -64,11 +65,15 @@ def logout_view(request):
 def movies_view(request):
     query = request.GET.get('q')
     movies = Movie.objects.all()
-
+    
     if query:
         movies = Movie.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
 
-    return render(request,"main/movies.html",{"movies":movies,"query":query})
+    p = Paginator(movies,1)
+    p_number = request.GET.get('page')
+    p_obj = p.get_page(p_number)
+    
+    return render(request,"main/movies.html",{"query":query,"p_obj":p_obj})
 
 def movie_detail_view(request,id):
     movie = get_object_or_404(Movie, id=id)
