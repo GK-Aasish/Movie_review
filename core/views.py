@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
+from django.db.models import Q
 from core.models import Movie,Genre
 
 # Create your views here.
@@ -61,8 +62,13 @@ def logout_view(request):
     return redirect("home")
 
 def movies_view(request):
+    query = request.GET.get('q')
     movies = Movie.objects.all()
-    return render(request,"main/movies.html",{"movies":movies})
+
+    if query:
+        movies = Movie.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+
+    return render(request,"main/movies.html",{"movies":movies,"query":query})
 
 def movie_detail_view(request,id):
     movie = get_object_or_404(Movie, id=id)

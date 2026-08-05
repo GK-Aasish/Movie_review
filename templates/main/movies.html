@@ -2,6 +2,13 @@
 {% block content %}
     <div class="movies-container">
         <div class="add-movies">
+            <div class="serarch">
+                <form method="get">
+                    {% csrf_token %}
+                    <input type="text" name="q" id="searchbar" value ={{request.GET.q}}>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             <a href="{% url "add_movie" %}">Add Movie</a>
         </div>
         {% for i in movies %}
@@ -12,6 +19,8 @@
             <span>{{i.released_date}}</span>
         </div>
             <a href="{% url "details" i.id%}">View details</a>
+        {% empty %}
+            <p>No movies found</p>
         {% endfor %}
     </div>
 {% endblock %}
