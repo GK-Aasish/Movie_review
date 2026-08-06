@@ -3,7 +3,7 @@ from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.paginator import Paginator
-from core.models import Movie,Genre
+from core.models import Movie,Genre,Reviews
 
 # Create your views here.
 def home_view(request):
@@ -155,4 +155,34 @@ def add_movie_view(request):
         )
         return redirect("movies")
     return render(request,"main/add-movie.html",{"get_genre":get_genre})
+
+def rating_view(request,id):
+    movie = get_object_or_404(Movie, id=id)
+    if request.method == "POST":
+        errors = {}
+        rating_value = request.POST.get('rating')
+        comment_value = request.POST.get('comment')
+
+        if not comment_value:
+            errors['comment'] = "Enter commetn"
+
+        if not rating_value:
+            errors['rating'] = " Enter Rating"
+
+        if errors:
+            return render(request,"main/movie_details.html",{"errors":errors,"data":request.POST,"movie":movie})
+
+        if not errors:
+            Reviews.objects.create(
+                movie = movie,
+                user = request.user,
+                rating =int(rating_value),
+                comment = comment_value
+            )
+            return redirect("details",id=movie.id)
+        
+    return redirect("details",id=movie.id)
+        
+
+
 

@@ -24,6 +24,7 @@ class Reviews(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie,on_delete=models.CASCADE,related_name="reviews")
     rating = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
+    comment = models.TextField()
 
     class Meta:
         verbose_name = "Review"

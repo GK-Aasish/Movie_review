@@ -11,6 +11,35 @@
         <a href="{% url "delete" movie.id %}">Delete</a>
     </div>
     <div class="review-container">
-        
+        <form class="rating-form" method="post" action="{% url "review" movie.id %}">
+            {% csrf_token %}
+            <div>
+                <input type="radio" name="rating" value="1" id="1-star">
+                <label for="1-star">1 star</label>
+            </div>
+            <div>
+                <input type="radio" name="rating" value="2" id="2-star">
+                <label for="2-star">2 star</label>
+            </div>
+            <div>
+                <input type="radio" name="rating" value="3" id="3-star">
+                <label for="3-star">3 star</label>
+            </div>
+            <div>
+                <input type="radio" name="rating" value="4" id="4-star">
+                <label for="4-star">4 star</label>
+            </div>
+            <div>
+                <input type="radio" name="rating" value="5" id="5-star">
+                <label for="5-star">5 star</label>
+            </div>
+            <span>{{errors.rating}}</span>
+            <div class="comment">
+                <label for="comment">Comment</label>
+                <textarea name="comment" id="comment">{{data.comment}}</textarea>
+                <span>{{errors.comment}}</span>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 {% endblock %}  

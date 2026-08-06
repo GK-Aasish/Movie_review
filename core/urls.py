@@ -9,6 +9,7 @@ from core.views import (
     delete_movie_view,
     add_movie_view,
     logout_view,
+    rating_view,
     )
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path("edit/<int:id>",edit_movie_view,name="edit"),
     path("delete/<int:id>",delete_movie_view,name="delete"),
     path("add",add_movie_view,name="add_movie"),
+    path("movie/<int:id>/review",rating_view,name="review")
 ]
