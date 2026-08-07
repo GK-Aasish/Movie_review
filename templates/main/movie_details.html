@@ -1,49 +1,70 @@
 {% extends "base.html" %}
-{% load static %}
 {% block content %}
-    <div class="movies-container">
-        <div class="add-movies">
-            <div class="serarch">
-                <form method="get">
+    <div class="details-page">
+        <!-- Movie Profile Section -->
+        <div class="movie-profile">
+            <div class="profile-header">
+                <div class="movie-info">
+                    <span class="genre-badge">{{movie.genre}}</span>
+                    <h1>{{movie.title}}</h1>
+                    <p class="release-date">📅 Released: {{movie.released_date}}</p>
+                </div>
+                
+                <div class="admin-controls">
+                    <a href="{% url 'edit' movie.id %}" class="btn-edit">Edit Movie</a>
+                    <a href="{% url 'delete' movie.id %}" class="btn-delete">Delete</a>
+                </div>
+            </div>
+            
+            <div class="profile-body">
+                <h3>Synopsis</h3>
+                <p>{{movie.description}}</p>
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div class="review-section">
+            <div class="review-card">
+                <h2>Rate this Movie</h2>
+                <p>Share your thoughts and give a rating.</p>
+
+                <form class="rating-form" method="post" action="{% url 'review' movie.id %}">
                     {% csrf_token %}
-                    <input type="text" name="q" id="searchbar" placeholder="Search movies..." value="{{request.GET.q}}">
-                    <button type="submit">Search</button>
+                    
+                    <div class="star-rating">
+                        <!-- Rating Radio Buttons -->
+                        <div class="star-group">
+                            <input type="radio" name="rating" value="5" id="5-star">
+                            <label for="5-star" title="5 stars">★</label>
+                        </div>
+                        <div class="star-group">
+                            <input type="radio" name="rating" value="4" id="4-star">
+                            <label for="4-star" title="4 stars">★</label>
+                        </div>
+                        <div class="star-group">
+                            <input type="radio" name="rating" value="3" id="3-star">
+                            <label for="3-star" title="3 stars">★</label>
+                        </div>
+                        <div class="star-group">
+                            <input type="radio" name="rating" value="2" id="2-star">
+                            <label for="2-star" title="2 stars">★</label>
+                        </div>
+                        <div class="star-group">
+                            <input type="radio" name="rating" value="1" id="1-star">
+                            <label for="1-star" title="1 star">★</label>
+                        </div>
+                    </div>
+                    {% if errors.rating %}<span class="error-text">{{errors.rating}}</span>{% endif %}
+
+                    <div class="comment-group">
+                        <label for="comment">Your Review</label>
+                        <textarea name="comment" id="comment" placeholder="What did you think about the movie...?"{{data.comment}}>{{data.comment}}</textarea>
+                        {% if errors.comment %}<span class="error-text">{{errors.comment}}</span>{% endif %}
+                    </div>
+
+                    <button type="submit" class="btn-submit">Post Review</button>
                 </form>
             </div>
-            <a href="{% url 'add_movie' %}">+ Add Movie</a>
-        </div>
-
-        <!-- WRAPPER ADDED HERE FOR GRID LAYOUT -->
-        <div class="movies-grid">
-            {% for movie in p_obj %}
-                <div class="movies-card">
-                    <span>{{movie.genre}}</span>
-                    <h1>{{movie.title}}</h1>
-                    <p>{{movie.description}}</p>
-                    <span class="date">{{movie.released_date}}</span>
-                    <a href="{% url 'details' movie.id %}">View Details</a>
-                </div>
-            {% empty %}
-                <p style="grid-column: 1/-1; text-align: center;">No movies found</p>
-            {% endfor %}
-        </div>
-
-        <div class="pagination">
-            <span class="step-links">
-                {% if p_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{p_obj.previous_page_number}}">previous</a>
-                {% endif %}
-                
-                <span class="current">
-                    Page {{p_obj.number}} of {{p_obj.paginator.num_pages}}
-                </span>
-
-                {% if p_obj.has_next %}
-                    <a href="?page={{p_obj.next_page_number}}&q={{request.GET.q}}">next</a>
-                    <a href="?page={{p_obj.paginator.num_pages}}">last &raquo;</a>
-                {% endif %}
-            </span>
         </div>
     </div>
 {% endblock %}

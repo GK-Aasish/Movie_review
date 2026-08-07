@@ -1,44 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="movies-container">
+        <!-- Top Bar: Search and Add -->
         <div class="add-movies">
-            <div class="serarch">
-                <form method="get">
+            <div class="search-section">
+                <form method="get" class="search-form">
                     {% csrf_token %}
-                    <input type="text" name="q" id="searchbar" value ={{request.GET.q}}>
+                    <input type="text" name="q" id="searchbar" placeholder="Search movies..." value="{{request.GET.q}}">
                     <button type="submit">Search</button>
                 </form>
             </div>
-            <a href="{% url "add_movie" %}">Add Movie</a>
+            <a href="{% url 'add_movie' %}" class="btn-add">+ Add Movie</a>
         </div>
-        {% for movie in p_obj %}
-            <div class="movies-card">
-                <h1>{{movie.title}}</h1>
-                <span>{{movie.genre}}</span>
-                <p>{{movie.description}}</p>
-                <span>{{movie.released_date}}</span>
-                <a href="{% url "details" movie.id%}">View details</a>
-        {% empty %}
-            <p>No movies found</p>
-            </div>
-        {% endfor %}
+
+        <!-- THE GRID: This is what makes the UI "Cool" -->
+        <div class="movies-grid">
+            {% for movie in p_obj %}
+                <div class="movies-card">
+                    <div class="genre-badge">{{movie.genre}}</div>
+                    <div class="card-body">
+                        <h1>{{movie.title}}</h1>
+                        <p>{{movie.description}}</p>
+                        <div class="card-footer">
+                            <span class="release-date">{{movie.released_date}}</span>
+                            <a href="{% url 'details' movie.id %}" class="view-details">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-results">
+                    <p>🎬 No movies found. Try a different search!</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination Section -->
         <div class="pagination">
             <span class="step-links">
                 {% if p_obj.has_previous %}
-                    <!--Go to the absolute Firs Page-->
-                    <a href="?page=1">&laquo; first</a>
-
-                    <!--Go to the absolute Firs Page-->
+                    <!-- Added &q={{request.GET.q}} to keep the search active on next pages -->
+                    <a href="?page=1&q={{request.GET.q}}">&laquo; first</a>
                     <a href="?page={{p_obj.previous_page_number}}">previous</a>
                 {% endif %}
+                
                 <span class="current">
                     Page {{p_obj.number}} of {{p_obj.paginator.num_pages}}
                 </span>
+
                 {% if p_obj.has_next %}
-                <!-- Go to the next page. -->
-                 <a href="?page={{p_obj.next_page_number}}">next</a>
-                 <!-- Go to the next page. -->
-                 <a href="?page={{p_obj.paginator.num_pages}}"> &raquo; last</a>
+                    <a href="?page={{p_obj.next_page_number}}&q={{request.GET.q}}">next</a>
+                    <a href="?page={{p_obj.paginator.num_pages}}&q={{request.GET.q}}">last &raquo;</a>
                 {% endif %}
             </span>
         </div>

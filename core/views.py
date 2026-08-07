@@ -76,6 +76,7 @@ def movies_view(request):
     return render(request,"main/movies.html",{"query":query,"p_obj":p_obj})
 
 def movie_detail_view(request,id):
+    print(f"--- DEBUG: View reached for movie ID: {id} ---") # <--- ADD THIS
     movie = get_object_or_404(Movie, id=id)
     return render(request,"main/movie_details.html",{"movie":movie})
 
