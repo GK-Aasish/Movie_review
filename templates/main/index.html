@@ -1,10 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-    <main>
+    <main class="home-page">
         <div class="hero">
-            <h2>Welcome to Movie Review <br> <span>{% if request.user.is_authenticated %}{{user.username}}{% endif %}</span></h2>
-            <span>Where movie meets critigue</span>
-            <button>Learn more</button>
+            <div class="hero-content">
+                <h2>Welcome to Movie Review <br> 
+                    <span class="username">
+                        {% if request.user.is_authenticated %}
+                            {{ request.user.username }}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </span>
+                </h2>
+                <p class="hero-subtitle">Where movies meet critique</p>
+                <div class="hero-btns">
+                    <a href="{% url 'movies' %}" class="btn-primary">Explore Movies</a>
+                    <a href="#" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <!-- This creates the atmospheric background glow -->
+            <div class="hero-overlay"></div>
         </div>
     </main>
 {% endblock %}

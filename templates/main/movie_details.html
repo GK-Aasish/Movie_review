@@ -1,45 +1,49 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
     <div class="movies-container">
-        <div class="movies-card">
-            <h1>{{movie.title}}</h1>
-            <span>{{movie.genre}}</span>
-            <p>{{movie.description}}</p>
-            <span>{{movie.released_date}}</span>
+        <div class="add-movies">
+            <div class="serarch">
+                <form method="get">
+                    {% csrf_token %}
+                    <input type="text" name="q" id="searchbar" placeholder="Search movies..." value="{{request.GET.q}}">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <a href="{% url 'add_movie' %}">+ Add Movie</a>
         </div>
-        <a href="{% url "edit" movie.id %}">Edit</a>
-        <a href="{% url "delete" movie.id %}">Delete</a>
+
+        <!-- WRAPPER ADDED HERE FOR GRID LAYOUT -->
+        <div class="movies-grid">
+            {% for movie in p_obj %}
+                <div class="movies-card">
+                    <span>{{movie.genre}}</span>
+                    <h1>{{movie.title}}</h1>
+                    <p>{{movie.description}}</p>
+                    <span class="date">{{movie.released_date}}</span>
+                    <a href="{% url 'details' movie.id %}">View Details</a>
+                </div>
+            {% empty %}
+                <p style="grid-column: 1/-1; text-align: center;">No movies found</p>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if p_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{p_obj.previous_page_number}}">previous</a>
+                {% endif %}
+                
+                <span class="current">
+                    Page {{p_obj.number}} of {{p_obj.paginator.num_pages}}
+                </span>
+
+                {% if p_obj.has_next %}
+                    <a href="?page={{p_obj.next_page_number}}&q={{request.GET.q}}">next</a>
+                    <a href="?page={{p_obj.paginator.num_pages}}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
-    <div class="review-container">
-        <form class="rating-form" method="post" action="{% url "review" movie.id %}">
-            {% csrf_token %}
-            <div>
-                <input type="radio" name="rating" value="1" id="1-star">
-                <label for="1-star">1 star</label>
-            </div>
-            <div>
-                <input type="radio" name="rating" value="2" id="2-star">
-                <label for="2-star">2 star</label>
-            </div>
-            <div>
-                <input type="radio" name="rating" value="3" id="3-star">
-                <label for="3-star">3 star</label>
-            </div>
-            <div>
-                <input type="radio" name="rating" value="4" id="4-star">
-                <label for="4-star">4 star</label>
-            </div>
-            <div>
-                <input type="radio" name="rating" value="5" id="5-star">
-                <label for="5-star">5 star</label>
-            </div>
-            <span>{{errors.rating}}</span>
-            <div class="comment">
-                <label for="comment">Comment</label>
-                <textarea name="comment" id="comment">{{data.comment}}</textarea>
-                <span>{{errors.comment}}</span>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-{% endblock %}  
+{% endblock %}
